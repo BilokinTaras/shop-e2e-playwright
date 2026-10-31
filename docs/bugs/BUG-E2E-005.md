@@ -1,4 +1,4 @@
-# BUG-E2E-005: Invalid promo code at checkout shows "Minified React error #441" in production builds
+# BUG-E2E-005: Rejected cart and checkout actions show "Minified React error #441" in production builds
 
 | Field        | Value                                                                                                                                |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -30,6 +30,16 @@ or use the non-minified dev environment for full errors and additional helpful w
 Totals are unchanged (correct).
 
 ![screenshot](evidence/BUG-E2E-005-discount-error.png)
+
+## Same defect in other places (exploratory session S2)
+
+| Action | Real reason from the API | Shown to the shopper |
+|---|---|---|
+| Apply an invalid promo code | "The promotion code … is invalid" | #441 |
+| Set a cart quantity above stock | "Some variant does not have the required inventory" | #441 |
+| Place an order whose item has just sold out | inventory error; no order is created (correct) | #441 |
+
+See [session 2](../manual/exploratory/session-2-stock.md).
 
 ## Root cause (analysis)
 

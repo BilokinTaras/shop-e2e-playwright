@@ -2,6 +2,7 @@
 import js from '@eslint/js';
 import playwright from 'eslint-plugin-playwright';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
 
 export default tseslint.config(
   { ignores: ['node_modules/', 'playwright-report/', 'test-results/', 'blob-report/', '.auth/'] },
@@ -64,5 +65,6 @@ export default tseslint.config(
   {
     files: ['**/*.mjs'],
     ...tseslint.configs.disableTypeChecked,
+    languageOptions: { globals: globals.node },
   },
 );
