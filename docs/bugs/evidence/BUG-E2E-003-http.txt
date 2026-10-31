@@ -1,0 +1,3 @@
+$ curl -s -w "\nHTTP %{http_code}\n" -H "content-type: application/json" -d '{"email":"qa-x@example.com"}' http://localhost:9000/auth/customer/emailpass/register
+{"type":"unauthorized","message":"Password should be a string"}
+HTTP 401

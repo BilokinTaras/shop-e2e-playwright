@@ -1,0 +1,7 @@
+$ curl -s -w "\nHTTP %{http_code}\n" -H "x-publishable-api-key: $KEY" "http://localhost:9000/store/products?limit=-1"
+{"code":"unknown_error","type":"unknown_error","message":"An unknown error occurred."}
+HTTP 500
+
+$ curl ... "http://localhost:9000/store/products?offset=-1"
+{"code":"unknown_error","type":"unknown_error","message":"An unknown error occurred."}
+HTTP 500

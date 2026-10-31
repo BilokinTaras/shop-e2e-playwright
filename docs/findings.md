@@ -1,0 +1,33 @@
+# Findings
+
+Defects found while automating Medusa with this suite. Each one is linked to a test that encodes the
+**correct** behaviour and is marked as an expected failure (`test.fail`) with the finding ID. When the
+product is fixed, the test starts passing, Playwright reports "expected to fail but passed", and the
+mark is removed — the suite never hides a regression and never silently stays red.
+
+Environment for all findings: `shop-sut` commit `62d1e81`, Medusa `@medusajs/*` 2.22.2 (dtc-starter
+`d4e4dae`), Next.js 16.3.8 storefront in production mode, PostgreSQL 17.11, Redis 7.4.12; Playwright
+1.64.1 (Chromium 156.0.8078.4, Firefox 157.0, WebKit 27.2); Windows 11 x86_64 + Docker Desktop.
+Found 2026-10-31.
+
+| ID                                 | Title                                                                                        | Area       | Severity | Priority | Test                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- | ---------- | -------- | -------- | --------------------------------------- |
+| [BUG-E2E-001](bugs/BUG-E2E-001.md) | Negative `limit`/`offset` on `GET /store/products` returns 500 instead of 400                | Store API  | Minor    | Medium   | `tests/api/catalog.spec.ts`             |
+| [BUG-E2E-002](bugs/BUG-E2E-002.md) | Customer registration issues a token for a string that is not an email                       | Auth API   | Minor    | Low      | `tests/api/auth-and-access.spec.ts`     |
+| [BUG-E2E-003](bugs/BUG-E2E-003.md) | Registration without a password returns 401 "unauthorized" instead of a 400 validation error | Auth API   | Trivial  | Low      | `tests/api/auth-and-access.spec.ts`     |
+| [BUG-E2E-004](bugs/BUG-E2E-004.md) | `quantity: 0` error message says the minimum is 0                                            | Store API  | Trivial  | Low      | `tests/api/cart-and-promotions.spec.ts` |
+| [BUG-E2E-005](bugs/BUG-E2E-005.md) | Invalid promo code at checkout shows "Minified React error #441" in production builds        | Storefront | Major    | High     | `tests/e2e/promotions.spec.ts`          |
+| [BUG-E2E-006](bugs/BUG-E2E-006.md) | Cart delete button loses its `data-testid` and has no accessible name                        | Storefront | Minor    | Low      | `src/pages/storefront.ts` (workaround)  |
+| [A11Y-001](bugs/A11Y-001.md)       | Admin "Create product" wizard is mounted twice and hidden from assistive technology          | Admin      | Major    | Medium   | `src/pages/admin.ts` (workaround)       |
+
+Severity scale: Critical (data loss, money, security) · Major (a core flow is broken or misleading) ·
+Minor (wrong behaviour with a workaround) · Trivial (cosmetic, wording).
+Priority reflects how soon a real team should fix it given user impact and effort.
+
+## Observed, not a defect
+
+| Observation                                                                                  | Why it is not filed                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registering an existing email **with the same password** returns a token instead of an error | Medusa lets one email hold several actor types (admin and customer); with a different password the call is refused with 401 "Identity with email already exists". Covered by a positive test. |
+| `POST /store/carts/{id}/complete` twice returns the same order                               | Correct idempotent behaviour; covered by a test.                                                                                                                                              |
+| Production storefront cookies are `Secure`, so WebKit drops them on plain-HTTP `localhost`   | Correct for production behind HTTPS; the local stand opts out (shop-sut ADR-002).                                                                                                             |
