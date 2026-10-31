@@ -92,8 +92,15 @@ export class ProductPage extends StorefrontPage {
     return this.page.getByTestId('option-button').filter({ hasText: new RegExp(`^${value}$`) });
   }
 
+  /**
+   * Selecting an option re-renders the product actions and rewrites `?v_id=` in the URL. Clicking
+   * "Add to cart" during that re-render was lost on mobile WebKit, so wait until both have settled.
+   */
   async selectOption(value: string): Promise<void> {
-    await this.optionButton(value).click();
+    const option = this.optionButton(value);
+    await option.click();
+    await option.and(this.page.locator('.border-ui-border-interactive')).waitFor();
+    await this.page.waitForURL(/[?&]v_id=variant_/);
   }
 
   /** Clicks "Add to cart" and waits until the header shows one more item (the client refresh is done). */
@@ -247,6 +254,8 @@ export class OrderConfirmedPage extends StorefrontPage {
 export class AccountPage extends StorefrontPage {
   readonly loginPage: Locator;
   readonly registerPage: Locator;
+  /** Visible on desktop and mobile layouts once a customer is signed in. */
+  readonly signedIn: Locator;
   readonly loginError: Locator;
   readonly overview: Locator;
   readonly customerEmail: Locator;
@@ -258,6 +267,7 @@ export class AccountPage extends StorefrontPage {
   constructor(page: Page, country: string) {
     super(page, country);
     this.loginPage = page.getByTestId('login-page');
+    this.signedIn = page.getByTestId('logout-button').filter({ visible: true });
     this.registerPage = page.getByTestId('register-page');
     this.loginError = page.getByTestId('login-error-message');
     this.overview = page.getByTestId('overview-page-wrapper');

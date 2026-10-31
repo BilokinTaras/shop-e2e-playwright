@@ -16,8 +16,8 @@ test.describe('Customer account', { tag: '@e2e' }, () => {
       await account.goto();
       await account.openRegister();
       await account.register(person);
-      await expect(account.overview).toBeVisible();
-      await expect(account.customerEmail).toHaveText(person.email);
+      // The overview panel is desktop-only; the sign-out control exists on every layout.
+      await expect(account.signedIn).toBeVisible();
     });
 
     await test.step('the new customer exists in the Store API', async ({}) => {
@@ -35,7 +35,7 @@ test.describe('Customer account', { tag: '@e2e' }, () => {
 
     await test.step('sign back in', async () => {
       await account.login(person.email, person.password);
-      await expect(account.overview).toBeVisible();
+      await expect(account.signedIn).toBeVisible();
     });
   });
 

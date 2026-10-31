@@ -13,7 +13,7 @@
     "test:smoke": "playwright test --grep @smoke",
     "test:api": "playwright test --project=api",
     "test:e2e": "playwright test --project=chromium --project=firefox --project=webkit",
-    "test:visual": "playwright test --project=visual",
+    "test:visual": "sh scripts/visual-docker.sh",
     "test:a11y": "playwright test --project=a11y",
     "test:mobile": "playwright test --project=mobile-chrome --project=mobile-safari",
     "test:ui": "playwright test --ui",
@@ -25,7 +25,8 @@
     "typecheck": "tsc --noEmit",
     "sut:up": "make -C ../shop-sut up",
     "sut:smoke": "make -C ../shop-sut smoke",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:visual:update": "sh scripts/visual-docker.sh --update-snapshots"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

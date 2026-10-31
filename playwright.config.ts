@@ -4,6 +4,8 @@ import { loadEnv } from './src/config/env';
 
 const env = loadEnv();
 const isCI = Boolean(process.env.CI);
+/** Visual tests run only inside the official Linux image (scripts/visual-docker.sh sets PW_VISUAL=1). */
+const runVisual = process.env.PW_VISUAL === '1';
 
 export const STORAGE_STATE = {
   customer: '.auth/customer.json',
@@ -13,6 +15,14 @@ export const STORAGE_STATE = {
 
 /** Browser projects run the end-to-end suite; API, visual and a11y suites have their own projects. */
 const e2e = { testDir: './tests/e2e', dependencies: ['setup'] };
+
+const visualProject = {
+  // Baselines come only from the official Playwright Linux image, see docs/adr/ADR-003-visual-baselines.md.
+  name: 'visual',
+  testDir: './tests/visual',
+  use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } },
+  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
+};
 
 export default defineConfig({
   testDir: './tests',
@@ -62,13 +72,7 @@ export default defineConfig({
       grep: /@mobile/,
       use: { ...devices['iPhone 15'] },
     },
-    {
-      // Visual baselines are generated only on Linux (official Playwright Docker image), see ADR-003.
-      name: 'visual',
-      testDir: './tests/visual',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } },
-      snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
-    },
+    ...(runVisual ? [visualProject] : []),
     {
       name: 'a11y',
       testDir: './tests/a11y',

@@ -1,0 +1,77 @@
+[
+  {
+    "page": "home",
+    "rule": "color-contrast",
+    "reason": "A11Y-007: interactive text colour (\"View all\", \"Add Promotion Code(s)\") below 4.5:1 on white"
+  },
+  {
+    "page": "home",
+    "rule": "link-name",
+    "reason": "A11Y-006: footer logo links (medusajs.com, nextjs.org) and cart/checkout thumbnail links have no text"
+  },
+  {
+    "page": "home",
+    "rule": "nested-interactive",
+    "reason": "A11Y-004: header cart link is nested inside a button on every page (starter markup)"
+  },
+  {
+    "page": "product",
+    "rule": "button-name",
+    "reason": "A11Y-005: product accordion toggle buttons have no accessible name"
+  },
+  {
+    "page": "product",
+    "rule": "link-name",
+    "reason": "A11Y-006: footer logo links (medusajs.com, nextjs.org) and cart/checkout thumbnail links have no text"
+  },
+  {
+    "page": "product",
+    "rule": "nested-interactive",
+    "reason": "A11Y-004: header cart link is nested inside a button on every page (starter markup)"
+  },
+  {
+    "page": "cart",
+    "rule": "button-name",
+    "reason": "A11Y-003 / BUG-E2E-006: cart delete button is icon-only with no accessible name"
+  },
+  {
+    "page": "cart",
+    "rule": "color-contrast",
+    "reason": "A11Y-007: interactive text colour (\"View all\", \"Add Promotion Code(s)\") below 4.5:1 on white"
+  },
+  {
+    "page": "cart",
+    "rule": "link-name",
+    "reason": "A11Y-006: footer logo links (medusajs.com, nextjs.org) and cart/checkout thumbnail links have no text"
+  },
+  {
+    "page": "cart",
+    "rule": "nested-interactive",
+    "reason": "A11Y-004: header cart link is nested inside a button on every page (starter markup)"
+  },
+  {
+    "page": "cart",
+    "rule": "select-name",
+    "reason": "A11Y-003: cart quantity <select> has no accessible name"
+  },
+  {
+    "page": "checkout",
+    "rule": "color-contrast",
+    "reason": "A11Y-007: interactive text colour (\"View all\", \"Add Promotion Code(s)\") below 4.5:1 on white"
+  },
+  {
+    "page": "checkout",
+    "rule": "label",
+    "reason": "A11Y-002: checkout address inputs use visual floating labels that are not associated with the inputs"
+  },
+  {
+    "page": "checkout",
+    "rule": "link-name",
+    "reason": "A11Y-006: footer logo links (medusajs.com, nextjs.org) and cart/checkout thumbnail links have no text"
+  },
+  {
+    "page": "checkout",
+    "rule": "select-name",
+    "reason": "A11Y-002: checkout country <select> has no accessible name"
+  }
+]

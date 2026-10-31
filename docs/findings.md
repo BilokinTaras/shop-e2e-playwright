@@ -10,15 +10,17 @@ Environment for all findings: `shop-sut` commit `62d1e81`, Medusa `@medusajs/*` 
 1.64.1 (Chromium 156.0.8078.4, Firefox 157.0, WebKit 27.2); Windows 11 x86_64 + Docker Desktop.
 Found 2026-10-31.
 
-| ID                                 | Title                                                                                        | Area       | Severity | Priority | Test                                    |
-| ---------------------------------- | -------------------------------------------------------------------------------------------- | ---------- | -------- | -------- | --------------------------------------- |
-| [BUG-E2E-001](bugs/BUG-E2E-001.md) | Negative `limit`/`offset` on `GET /store/products` returns 500 instead of 400                | Store API  | Minor    | Medium   | `tests/api/catalog.spec.ts`             |
-| [BUG-E2E-002](bugs/BUG-E2E-002.md) | Customer registration issues a token for a string that is not an email                       | Auth API   | Minor    | Low      | `tests/api/auth-and-access.spec.ts`     |
-| [BUG-E2E-003](bugs/BUG-E2E-003.md) | Registration without a password returns 401 "unauthorized" instead of a 400 validation error | Auth API   | Trivial  | Low      | `tests/api/auth-and-access.spec.ts`     |
-| [BUG-E2E-004](bugs/BUG-E2E-004.md) | `quantity: 0` error message says the minimum is 0                                            | Store API  | Trivial  | Low      | `tests/api/cart-and-promotions.spec.ts` |
-| [BUG-E2E-005](bugs/BUG-E2E-005.md) | Invalid promo code at checkout shows "Minified React error #441" in production builds        | Storefront | Major    | High     | `tests/e2e/promotions.spec.ts`          |
-| [BUG-E2E-006](bugs/BUG-E2E-006.md) | Cart delete button loses its `data-testid` and has no accessible name                        | Storefront | Minor    | Low      | `src/pages/storefront.ts` (workaround)  |
-| [A11Y-001](bugs/A11Y-001.md)       | Admin "Create product" wizard is mounted twice and hidden from assistive technology          | Admin      | Major    | Medium   | `src/pages/admin.ts` (workaround)       |
+| ID                                 | Title                                                                                        | Area       | Severity    | Priority | Test                                    |
+| ---------------------------------- | -------------------------------------------------------------------------------------------- | ---------- | ----------- | -------- | --------------------------------------- |
+| [BUG-E2E-001](bugs/BUG-E2E-001.md) | Negative `limit`/`offset` on `GET /store/products` returns 500 instead of 400                | Store API  | Minor       | Medium   | `tests/api/catalog.spec.ts`             |
+| [BUG-E2E-002](bugs/BUG-E2E-002.md) | Customer registration issues a token for a string that is not an email                       | Auth API   | Minor       | Low      | `tests/api/auth-and-access.spec.ts`     |
+| [BUG-E2E-003](bugs/BUG-E2E-003.md) | Registration without a password returns 401 "unauthorized" instead of a 400 validation error | Auth API   | Trivial     | Low      | `tests/api/auth-and-access.spec.ts`     |
+| [BUG-E2E-004](bugs/BUG-E2E-004.md) | `quantity: 0` error message says the minimum is 0                                            | Store API  | Trivial     | Low      | `tests/api/cart-and-promotions.spec.ts` |
+| [BUG-E2E-005](bugs/BUG-E2E-005.md) | Invalid promo code at checkout shows "Minified React error #441" in production builds        | Storefront | Major       | High     | `tests/e2e/promotions.spec.ts`          |
+| [BUG-E2E-006](bugs/BUG-E2E-006.md) | Cart delete button loses its `data-testid` and has no accessible name                        | Storefront | Minor       | Low      | `src/pages/storefront.ts` (workaround)  |
+| [BUG-E2E-007](bugs/BUG-E2E-007.md) | Losing the connection at checkout gives no retryable error (Chromium also loses the address) | Storefront | Minor       | Medium   | `tests/e2e/network.spec.ts`             |
+| A11Y-002…007                       | Storefront WCAG 2.1 violations found by axe-core — see [accessibility.md](accessibility.md)  | Storefront | Major–Minor | Medium   | `tests/a11y/wcag.spec.ts` (baseline)    |
+| [A11Y-001](bugs/A11Y-001.md)       | Admin "Create product" wizard is mounted twice and hidden from assistive technology          | Admin      | Major       | Medium   | `src/pages/admin.ts` (workaround)       |
 
 Severity scale: Critical (data loss, money, security) · Major (a core flow is broken or misleading) ·
 Minor (wrong behaviour with a workaround) · Trivial (cosmetic, wording).
