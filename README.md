@@ -8,12 +8,16 @@ Store/Admin REST APIs in one Playwright framework, with visual, accessibility an
 ## In 30 seconds
 
 - **75 test cases, 121 runs** across Chromium, Firefox, WebKit, Pixel 7 and iPhone 15 emulation: 45 API,
-  19 E2E, 7 accessibility/ARIA, 4 visual — full local run **119 passed in 66 s** (2026-10-31).
+  19 E2E, 7 accessibility/ARIA, 4 visual — full local run **119 runs passed, 0 failed, 0 flaky, in 86 s**
+  on 6 workers ([the run's own output](docs/verification/2026-11-01.md), 2026-11-01). That 119 counts
+  2 setup runs and the 10 runs of the six expected-failure tests, and excludes the visual project.
 - Hybrid tests: data is prepared through the Admin API, the action happens in the browser, the result is
   verified through the API — e.g. the UI checkout total must equal the order total in the Admin API.
-- **15 real findings in Medusa 2.22.2**, each with a reproduction and a test that encodes the correct
-  behaviour — e.g. every rejected checkout action shows *"Minified React error #441"* in production builds.
-- Zero flaky tests across repeat runs (Chromium ×5, WebKit ×3); retries are off locally.
+- **15 real findings in Medusa 2.22.2**, each with a reproduction; **6 are pinned by an expected-failure
+  test**, the rest by a page-object workaround, an accessibility baseline entry or session evidence
+  ([how each one is pinned](docs/findings.md)) — e.g. three rejected checkout actions show
+  *"Minified React error #441"* in production builds.
+- Zero flaky tests: retries are off locally, and the committed run above reports 0 flaky.
 - Manual QA package: test plan, smoke checklist, **106 test cases** in CSV for TestRail/Qase (76 linked to
   automated tests, 30 manual-only), three SBTM exploratory sessions with screenshots.
 
@@ -162,8 +166,10 @@ All found on 2026-10-31 against the pinned stand. Details and evidence: [docs/fi
 | BUG-E2E-008 | Cart quantity select ignores stock and shows a duplicate "1" | Minor |
 | … | 9 more (validation messages, unnamed controls, contrast) | Minor–Trivial |
 
-Tests for open defects are marked `test.fail()` with the finding ID: they pass while the defect exists
-and alert the team the moment it is fixed.
+Six of the findings are marked `test.fail()` with the finding ID: they pass while the defect exists and
+fail the run the moment it is fixed. The other nine are pinned by a workaround, a baseline entry or
+exploratory evidence — [docs/findings.md](docs/findings.md) says which, and what that does and does not
+catch.
 
 ## Decisions
 

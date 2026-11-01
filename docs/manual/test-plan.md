@@ -86,7 +86,7 @@ Gift cards. Translations. Real mobile devices (emulation only).
 | Automated browsers | Chromium 156, Firefox 157, WebKit 27.2 via Playwright 1.64.1 |
 | Mobile emulation | Pixel 7 (Chromium) and iPhone 15 (WebKit) for `@mobile` journeys |
 | Manual runs | Current desktop Chrome, Firefox or Safari; NVDA + Firefox or VoiceOver + Safari for screen-reader cases. Record the exact versions in the run |
-| Host | Windows 11 x86_64 + Docker Desktop. The stand also runs on macOS arm64 and Linux |
+| Host | Windows 11 x86_64 + Docker Desktop. The stand is designed for macOS arm64 and Linux as well, but only Windows x86_64 has been run so far |
 | Visual baselines | Official Playwright Linux image only |
 
 ## 8. Test data (from the contract)
@@ -99,8 +99,10 @@ Gift cards. Translations. Real mobile devices (emulation only).
 | Shipping | Standard and Express Shipping 10 EUR (Europe); QA Standard Shipping (US/CA) 8 USD |
 | Admin | `SUT_ADMIN_EMAIL` / `SUT_ADMIN_PASSWORD` from `sut.env` (test-only values) |
 
-Shared data is read-only. Customers, promotions and products are created per test through the API,
-with a unique suffix, and deleted afterwards. `make reset` restores a clean stand.
+Shared data is read-only. Customers, promotions and products are created per test through the API with a
+unique suffix. Promotions and products are deleted in fixture teardown; **customers, carts and orders are
+left behind** — they accumulate harmlessly because every test makes its own, and `make reset` restores a
+clean stand.
 
 ## 9. Deliverables
 

@@ -3,11 +3,15 @@
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
 
-const raw = execFileSync(process.execPath, ['node_modules/@playwright/test/cli.js', 'test', '--list', '--reporter=json'], {
-  encoding: 'utf8',
-  env: { ...process.env, PW_VISUAL: '1' },
-  maxBuffer: 32 * 1024 * 1024,
-});
+const raw = execFileSync(
+  process.execPath,
+  ['node_modules/@playwright/test/cli.js', 'test', '--list', '--reporter=json'],
+  {
+    encoding: 'utf8',
+    env: { ...process.env, PW_VISUAL: '1' },
+    maxBuffer: 32 * 1024 * 1024,
+  },
+);
 const report = JSON.parse(raw.slice(raw.indexOf('{')));
 
 /** @type {Map<string, {file: string, area: string, title: string, tags: Set<string>, projects: Set<string>, expectedFail: boolean}>} */
@@ -22,7 +26,8 @@ const walk = (suite, area) => {
       title: spec.title,
       tags: new Set(),
       projects: new Set(),
-      expectedFail: /\[(BUG|A11Y)-[A-Z0-9-]+\]/.test(spec.title),
+      // The id may be followed by words inside the same brackets, e.g. "[BUG-E2E-004 for the message]".
+      expectedFail: /\[(BUG|A11Y)-[A-Z0-9-]+[^\]]*\]/.test(spec.title),
     };
     for (const t of spec.tags ?? []) entry.tags.add(t.replace(/^@/, ''));
     for (const t of spec.tests ?? []) entry.projects.add(t.projectName);
@@ -54,10 +59,16 @@ for (const [area, list] of byArea) {
 }
 const total = rows.length;
 const runs = rows.reduce((n, t) => n + t.projects.size, 0);
-lines.push('', `**${total} test cases, ${runs} project runs** (one test case runs in each browser/project listed).`, '');
+lines.push(
+  '',
+  `**${total} test cases, ${runs} project runs** (one test case runs in each browser/project listed).`,
+  '',
+);
 lines.push('## Test cases', '', '| Area | Test | Tags | Projects |', '|---|---|---|---|');
 for (const t of rows.sort((a, b) => a.area.localeCompare(b.area) || a.title.localeCompare(b.title))) {
-  lines.push(`| ${t.area} | ${t.expectedFail ? '✗ ' : ''}${t.title.replace(/\|/g, '\\|')} | ${[...t.tags].sort().join(', ')} | ${[...t.projects].sort().join(', ')} |`);
+  lines.push(
+    `| ${t.area} | ${t.expectedFail ? '✗ ' : ''}${t.title.replace(/\|/g, '\\|')} | ${[...t.tags].sort().join(', ')} | ${[...t.projects].sort().join(', ')} |`,
+  );
 }
 writeFileSync('docs/coverage-matrix.md', `${lines.join('\n')}\n`);
 console.log(`coverage-matrix: ${total} test cases, ${runs} project runs -> docs/coverage-matrix.md`);

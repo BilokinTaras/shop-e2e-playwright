@@ -1,9 +1,18 @@
 # Findings
 
-Defects found while automating Medusa with this suite. Each one is linked to a test that encodes the
-**correct** behaviour and is marked as an expected failure (`test.fail`) with the finding ID. When the
-product is fixed, the test starts passing, Playwright reports "expected to fail but passed", and the
-mark is removed — the suite never hides a regression and never silently stays red.
+Defects found while automating Medusa with this suite. **How a finding is pinned depends on what the
+defect allows**, and the `Test` column says which of the three it is:
+
+| How it is pinned | Findings | What happens when the product is fixed |
+|---|---|---|
+| **Expected failure** (`test.fail`): a test asserts the correct behaviour and is expected to fail | BUG-E2E-001, 002, 003, 004, 005, 007 | Playwright reports "expected to fail but passed" and the run fails, so the mark must be removed |
+| **Workaround in a page object**: the defect makes an element unusable, so the locator avoids it and a comment names the finding | BUG-E2E-006, A11Y-001 | Nothing fails automatically; the comment is the reminder. Removing the workaround is what proves the fix |
+| **Accessibility baseline**: the violation is recorded in `tests/a11y/baseline.json` and the test fails on anything new | A11Y-002…007 | The entry becomes stale. The known limitation is in [accessibility.md](accessibility.md) |
+| **Exploratory evidence only** | BUG-E2E-008 | No automated check; see the session notes |
+
+So **6 of the 15 findings have an expected-failure test**; the rest are pinned by a workaround, a
+baseline entry or session evidence. The honest summary: the suite never silently stays red, and it
+catches a fix for those six — the other nine need a human to notice.
 
 Environment for all findings: `shop-sut` commit `62d1e81`, Medusa `@medusajs/*` 2.22.2 (dtc-starter
 `d4e4dae`), Next.js 16.3.8 storefront in production mode, PostgreSQL 17.11, Redis 7.4.12; Playwright
