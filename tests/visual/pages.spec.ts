@@ -43,7 +43,11 @@ test.describe('Visual', { tag: '@visual' }, () => {
   });
 
   test('product page', async ({ page, env }) => {
-    await new ProductPage(page, env.SUT_STOREFRONT_COUNTRY).goto('qa-tee');
+    const product = new ProductPage(page, env.SUT_STOREFRONT_COUNTRY);
+    await product.goto('qa-tee');
+    // The storefront preselects the first variant the API returns, and that order is not stable
+    // (BUG-E2E-009): a size is chosen explicitly, as a shopper would.
+    await product.selectOption('M');
     // Related products show starter items with images from Medusa's public S3 bucket: masked.
     const related = page.getByTestId('related-products-container');
     await expect(related).toBeVisible();
