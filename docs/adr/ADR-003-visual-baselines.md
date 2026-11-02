@@ -34,4 +34,5 @@ runs on localhost, so a browser in a container must reach it exactly as a host b
 ## Consequences
 
 - Updating baselines is a deliberate step: `npm run test:visual:update`, review the PNG diff, commit.
-- In CI (phase 2) the same image runs the visual project and uploads the diff on failure.
+- In CI the same image runs the visual project weekly (`weekly.yml`) and uploads the diff; new baselines come
+  from `update-visual-baselines.yml` as an artefact for review, never as an automatic commit.
