@@ -19,7 +19,10 @@ runs on localhost, so a browser in a container must reach it exactly as a host b
 3. The container joins the backend container's network namespace (`--network container:<medusa>`), so
    `http://localhost:8000` and `:9000` work unchanged — no host networking, works on Docker Desktop for Mac.
 4. Four stable screens: home, product, cart with one item, checkout address step. Animations and caret
-   are disabled; masked zones: related products (images from Medusa's public S3) and the footer year.
+   are disabled; masked zones: related products (images from Medusa's public S3), the footer year and the footer category
+   list, whose order differs between installations (BUG-E2E-009, found by the first CI run). The home
+   page's product rail has the same defect, so its cards are masked on the page and compared one by one,
+   found by title; the product page chooses a size explicitly instead of relying on the preselected one.
 5. QA products use local images served by the storefront, so the screens do not depend on the internet.
 
 ## Alternatives considered

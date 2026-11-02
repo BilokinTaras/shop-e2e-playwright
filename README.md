@@ -13,7 +13,7 @@ Store/Admin REST APIs in one Playwright framework, with visual, accessibility an
   2 setup runs and the 10 runs of the six expected-failure tests, and excludes the visual project.
 - Hybrid tests: data is prepared through the Admin API, the action happens in the browser, the result is
   verified through the API — e.g. the UI checkout total must equal the order total in the Admin API.
-- **15 real findings in Medusa 2.22.2**, each with a reproduction; **6 are pinned by an expected-failure
+- **16 real findings in Medusa 2.22.2**, each with a reproduction; **6 are pinned by an expected-failure
   test**, the rest by a page-object workaround, an accessibility baseline entry or session evidence
   ([how each one is pinned](docs/findings.md)) — e.g. three rejected checkout actions show
   *"Minified React error #441"* in production builds.
@@ -163,7 +163,7 @@ that passes on retry is reported as **flaky**, never as passed. Third-party acti
 
 ## Results and findings
 
-All found on 2026-10-31 against the pinned stand. Details and evidence: [docs/findings.md](docs/findings.md),
+Found on 2026-10-31 against the pinned stand (BUG-E2E-009 on 2026-11-02, in the first CI visual run). Details and evidence: [docs/findings.md](docs/findings.md),
 [docs/accessibility.md](docs/accessibility.md).
 
 | ID | Finding | Severity |
@@ -174,10 +174,11 @@ All found on 2026-10-31 against the pinned stand. Details and evidence: [docs/fi
 | BUG-E2E-001 | Negative `limit`/`offset` return 500 instead of 400 | Minor |
 | BUG-E2E-007 | Offline at checkout: no retryable error; Chromium loses the typed address | Minor |
 | BUG-E2E-008 | Cart quantity select ignores stock and shows a duplicate "1" | Minor |
+| BUG-E2E-009 | Default size and list order differ between installations (unordered API results) | Minor |
 | … | 9 more (validation messages, unnamed controls, contrast) | Minor–Trivial |
 
 Six of the findings are marked `test.fail()` with the finding ID: they pass while the defect exists and
-fail the run the moment it is fixed. The other nine are pinned by a workaround, a baseline entry or
+fail the run the moment it is fixed. The other ten are pinned by a workaround, a baseline entry or
 exploratory evidence — [docs/findings.md](docs/findings.md) says which, and what that does and does not
 catch.
 
