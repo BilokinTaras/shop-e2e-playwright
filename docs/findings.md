@@ -29,7 +29,7 @@ Found 2026-10-31, except BUG-E2E-009 (2026-11-02, first visual run on GitHub Act
 | [BUG-E2E-006](bugs/BUG-E2E-006.md) | Cart delete button loses its `data-testid` and has no accessible name                        | Storefront | Minor       | Low      | `src/pages/storefront.ts` (workaround)  |
 | [BUG-E2E-007](bugs/BUG-E2E-007.md) | Losing the connection at checkout gives no retryable error (Chromium also loses the address) | Storefront | Minor       | Medium   | `tests/e2e/network.spec.ts`             |
 | [BUG-E2E-008](bugs/BUG-E2E-008.md) | Cart quantity select ignores stock and shows a duplicate "1" | Storefront | Minor | Low | exploratory session S2 |
-| [BUG-E2E-009](bugs/BUG-E2E-009.md) | Footer category order differs between installations with the same data | Storefront | Trivial | Low | `tests/visual/pages.spec.ts` (mask) |
+| [BUG-E2E-009](bugs/BUG-E2E-009.md) | Home product rail and footer categories have no stable order | Storefront | Trivial | Low | `tests/visual/pages.spec.ts` (mask) |
 | A11Y-002…007                       | Storefront WCAG 2.1 violations found by axe-core — see [accessibility.md](accessibility.md)  | Storefront | Major–Minor | Medium   | `tests/a11y/wcag.spec.ts` (baseline)    |
 | [A11Y-001](bugs/A11Y-001.md)       | Admin "Create product" wizard is mounted twice and hidden from assistive technology          | Admin      | Major       | Medium   | `src/pages/admin.ts` (workaround)       |
 

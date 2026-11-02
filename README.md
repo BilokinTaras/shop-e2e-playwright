@@ -174,7 +174,7 @@ Found on 2026-10-31 against the pinned stand (BUG-E2E-009 on 2026-11-02, in the 
 | BUG-E2E-001 | Negative `limit`/`offset` return 500 instead of 400 | Minor |
 | BUG-E2E-007 | Offline at checkout: no retryable error; Chromium loses the typed address | Minor |
 | BUG-E2E-008 | Cart quantity select ignores stock and shows a duplicate "1" | Minor |
-| … | 10 more (validation messages, unnamed controls, contrast, unstable footer order) | Minor–Trivial |
+| … | 10 more (validation messages, unnamed controls, contrast, unstable list order) | Minor–Trivial |
 
 Six of the findings are marked `test.fail()` with the finding ID: they pass while the defect exists and
 fail the run the moment it is fixed. The other ten are pinned by a workaround, a baseline entry or

@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 
+import { ProductCard } from '../../src/components/product-card';
 import { CartPage, CheckoutPage, HomePage, ProductPage } from '../../src/pages/storefront';
 import { expect, test } from '../../src/fixtures';
 
@@ -22,10 +23,23 @@ const footerNoise = (page: Page) => [page.getByText(/© \d{4}/), page.getByTestI
 
 test.describe('Visual', { tag: '@visual' }, () => {
   test('home page', async ({ page, env }) => {
-    await new HomePage(page, env.SUT_STOREFRONT_COUNTRY).goto();
-    await expect(page.getByTestId('product-wrapper')).toHaveCount(3);
+    const home = new HomePage(page, env.SUT_STOREFRONT_COUNTRY);
+    await home.goto();
+    await expect(home.productCards).toHaveCount(3);
     await imagesLoaded(page);
-    await expect(page).toHaveScreenshot('home.png', { ...SHOT, mask: footerNoise(page) });
+    // The rail's order also changes between installations (BUG-E2E-009): the page is compared with the
+    // cards masked, and each card on its own, found by its title rather than its position.
+    await expect(page).toHaveScreenshot('home.png', {
+      ...SHOT,
+      mask: [home.productCards, ...footerNoise(page)],
+    });
+    for (const title of ['QA Mug', 'QA Tee', 'QA Sold Out']) {
+      const card = ProductCard.byTitle(page, title).root;
+      await expect(card).toHaveScreenshot(`home-card-${title.toLowerCase().replaceAll(' ', '-')}.png`, {
+        animations: 'disabled',
+        caret: 'hide',
+      });
+    }
   });
 
   test('product page', async ({ page, env }) => {
