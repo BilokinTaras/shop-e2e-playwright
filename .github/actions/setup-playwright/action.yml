@@ -1,0 +1,45 @@
+name: Set up Node and Playwright
+description: Node 22 with the npm cache, locked dependencies, and the requested browsers from a cache keyed by the Playwright version.
+
+inputs:
+  browsers:
+    description: Space-separated browsers to install (chromium firefox webkit), or empty for none
+    required: false
+    default: chromium
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: '22'
+        cache: npm
+
+    - name: Install dependencies
+      shell: bash
+      env:
+        HUSKY: '0'
+      run: npm ci --no-audit --no-fund
+
+    - name: Playwright version
+      id: pw
+      shell: bash
+      run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+    - name: Browser cache
+      if: inputs.browsers != ''
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-${{ inputs.browsers }}
+
+    # System libraries are not cached (they live outside the cache path), so --with-deps always runs; the
+    # browser download is skipped when the cache hit.
+    - name: Install browsers
+      if: inputs.browsers != ''
+      shell: bash
+      env:
+        BROWSERS: ${{ inputs.browsers }}
+      run: |
+        # shellcheck disable=SC2086
+        npx playwright install --with-deps $BROWSERS

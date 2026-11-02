@@ -23,8 +23,9 @@ Store/Admin REST APIs in one Playwright framework, with visual, accessibility an
 
 ## Live reports
 
-Not published yet: CI and the HTML report on GitHub Pages arrive when the repository is pushed
-(see Roadmap). Locally: `npm run report`.
+**Nightly report on GitHub Pages:** https://bilokintaras.github.io/shop-e2e-playwright/ — a summary page (runs
+per project, failed and flaky tests) and the merged HTML report with traces, published by
+[`nightly.yml`](.github/workflows/nightly.yml) once it has run. Locally: `npm run report`.
 
 ## Architecture
 
@@ -135,9 +136,17 @@ Not covered here: server-side failures between storefront and backend ([ADR-002]
 
 ## CI/CD
 
-Planned for publication: PR checks (lint, typecheck, API + smoke in parallel, trace on failure);
-nightly run on 3 browsers × 4 shards with blob reports merged into one HTML report on GitHub Pages;
-weekly visual, accessibility, mobile and flaky-hunt runs. Retries are already configured for CI only.
+| Workflow | When | What runs |
+|---|---|---|
+| [`pr.yml`](.github/workflows/pr.yml) | every PR and push to `main` | ESLint, `tsc`, Prettier; then the API suite and the Chromium `@smoke` tests in parallel, each against its own shop; HTML report with traces kept on failure |
+| [`nightly.yml`](.github/workflows/nightly.yml) | daily 01:07 UTC, manual | Chromium, Firefox and WebKit × 4 shards plus the API suite — 13 jobs, each with its own shop — blob reports merged into one HTML and JSON report, summarised (runs, duration, flaky) and published to Pages |
+| [`weekly.yml`](.github/workflows/weekly.yml) | Sundays, manual | visual (inside the official Playwright Linux image, ADR-003), accessibility, mobile emulation, and a flaky hunt: the Chromium suite three times with retries off |
+| [`update-visual-baselines.yml`](.github/workflows/update-visual-baselines.yml) | manual | regenerates the baselines in the same image and uploads them for review — committing them stays a person's decision |
+
+Every job starts the shop with the shared [`start-sut`](https://github.com/BilokinTaras/shop-sut/tree/main/.github/actions/start-sut)
+action from published images. Browsers are cached by Playwright version. Retries happen only in CI, and a test
+that passes on retry is reported as **flaky**, never as passed. Third-party actions are pinned to commit SHAs;
+`actionlint` and `zizmor` report nothing above low.
 
 ## How-to
 
@@ -187,7 +196,8 @@ Claude but have not generated any test yet. Details and limits: [docs/ai-usage.m
 
 ## Roadmap & known limitations
 
-- CI on GitHub Actions with sharding and a merged report on GitHub Pages (needs the GitHub repository).
+- The workflows pass `actionlint`, `zizmor` and Prettier locally but have not run on GitHub yet; the Pages link
+  shows nothing until the first nightly run.
 - Server-side fault injection (Toxiproxy between storefront and backend) for backend-failure UI tests.
 - Verified on Windows 11 x86_64 so far; macOS arm64 and Linux CI runs pending.
 - Visual tests cover four screens in Chromium only, by design.

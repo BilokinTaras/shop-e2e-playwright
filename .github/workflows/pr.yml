@@ -1,0 +1,91 @@
+name: PR checks
+
+# Lint and types first; then the API suite and the browser smoke tests in parallel, each against its own shop.
+# On failure the HTML report with traces is kept as an artefact.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static:
+    name: eslint · tsc · prettier
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-playwright
+        with:
+          browsers: ''
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+
+  tests:
+    name: ${{ matrix.name }}
+    needs: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: API suite
+            args: --project=api
+            browsers: ''
+          - name: browser smoke (Chromium)
+            args: --project=chromium --grep @smoke
+            browsers: chromium
+    env:
+      # The JSON reporter writes here (read by the summary step); the HTML report goes to playwright-report/.
+      PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-playwright
+        with:
+          browsers: ${{ matrix.browsers }}
+
+      - name: Start the shop
+        uses: BilokinTaras/shop-sut/.github/actions/start-sut@main # zizmor: ignore[unpinned-uses] same owner; switches to the release tag
+        with:
+          image-tag: main
+
+      - name: Playwright
+        env:
+          ARGS: ${{ matrix.args }}
+        run: |
+          # shellcheck disable=SC2086
+          npx playwright test $ARGS --reporter=github,list,html,json
+
+      - name: Summary
+        if: always()
+        env:
+          TITLE: ${{ matrix.name }}
+        run: |
+          if [ -f results.json ]; then node scripts/ci-summary.mjs results.json --title "$TITLE" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: HTML report with traces
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-report-${{ strategy.job-index }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Stand logs on failure
+        if: failure()
+        uses: BilokinTaras/shop-sut/.github/actions/collect-sut-logs@main # zizmor: ignore[unpinned-uses] same owner
+        with:
+          name: shop-sut-logs-${{ strategy.job-index }}

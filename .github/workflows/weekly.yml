@@ -1,0 +1,85 @@
+name: Weekly
+
+# The slower or more specialised suites, once a week:
+#   visual  — inside the official Playwright Linux image, the only place the baselines come from (ADR-003);
+#   a11y    — axe-core WCAG checks against the baseline;
+#   mobile  — Pixel 7 and iPhone 15 emulation of the @mobile tests;
+#   flaky   — the Chromium suite three times over with retries off: any test that fails once is flaky.
+on:
+  schedule:
+    - cron: '33 5 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: visual
+            browsers: ''
+          - name: a11y
+            args: --project=a11y
+            browsers: chromium
+          - name: mobile
+            args: --project=mobile-chrome --project=mobile-safari
+            browsers: chromium webkit
+          - name: flaky
+            args: --project=chromium --repeat-each=3 --retries=0
+            browsers: chromium
+    env:
+      PLAYWRIGHT_JSON_OUTPUT_NAME: results.json
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-playwright
+        with:
+          browsers: ${{ matrix.browsers }}
+
+      - name: Start the shop
+        uses: BilokinTaras/shop-sut/.github/actions/start-sut@main # zizmor: ignore[unpinned-uses] same owner; switches to the release tag
+        with:
+          image-tag: main
+
+      - name: Visual, in the official Linux image
+        if: matrix.name == 'visual'
+        env:
+          SUT_DIR: shop-sut
+        run: sh scripts/visual-docker.sh
+
+      - name: Playwright
+        if: matrix.name != 'visual'
+        env:
+          ARGS: ${{ matrix.args }}
+        run: |
+          # shellcheck disable=SC2086
+          npx playwright test $ARGS --reporter=github,list,html,json
+
+      - name: Summary
+        if: always() && matrix.name != 'visual'
+        env:
+          TITLE: Weekly — ${{ matrix.name }}
+        run: |
+          if [ -f results.json ]; then node scripts/ci-summary.mjs results.json --title "$TITLE" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: weekly-${{ matrix.name }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+      - name: Stand logs on failure
+        if: failure()
+        uses: BilokinTaras/shop-sut/.github/actions/collect-sut-logs@main # zizmor: ignore[unpinned-uses] same owner
+        with:
+          name: shop-sut-logs-${{ matrix.name }}

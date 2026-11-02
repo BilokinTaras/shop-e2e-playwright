@@ -1,0 +1,49 @@
+name: Update visual baselines
+
+# Regenerates the visual baselines in the same Linux image CI compares against (ADR-003). The result is an
+# artefact, not a commit: a person reviews the new screenshots, then commits them in a pull request, so a
+# visual change is always a reviewed decision rather than something CI accepted on its own.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-playwright
+        with:
+          browsers: ''
+
+      - name: Start the shop
+        uses: BilokinTaras/shop-sut/.github/actions/start-sut@main # zizmor: ignore[unpinned-uses] same owner; switches to the release tag
+        with:
+          image-tag: main
+
+      - name: Regenerate
+        env:
+          SUT_DIR: shop-sut
+        run: sh scripts/visual-docker.sh --update-snapshots
+
+      - name: What changed
+        run: |
+          {
+            echo "### Visual baselines"
+            echo
+            git status --porcelain tests/visual | sed 's/^/    /' || true
+            echo
+            echo "Download the artefact, review the images, copy them into tests/visual/__screenshots__/ and"
+            echo "commit them in a pull request."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: visual-baselines
+          path: tests/visual/__screenshots__/
+          retention-days: 7
