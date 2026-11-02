@@ -14,7 +14,7 @@ So **6 of the 15 findings have an expected-failure test**; the rest are pinned b
 baseline entry or session evidence. The honest summary: the suite never silently stays red, and it
 catches a fix for those six — the other nine need a human to notice.
 
-Environment for all findings: `shop-sut` commit `62d1e81`, Medusa `@medusajs/*` 2.22.2 (dtc-starter
+Environment for all findings: `shop-sut` commit `6ae6878`, Medusa `@medusajs/*` 2.22.2 (dtc-starter
 `d4e4dae`), Next.js 16.3.8 storefront in production mode, PostgreSQL 17.11, Redis 7.4.12; Playwright
 1.64.1 (Chromium 156.0.8078.4, Firefox 157.0, WebKit 27.2); Windows 11 x86_64 + Docker Desktop.
 Found 2026-10-31.

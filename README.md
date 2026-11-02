@@ -52,7 +52,7 @@ flowchart LR
   pages -->|browser :9000/app| admin[(Admin)]
 ```
 
-The stand comes from the sibling repository **shop-sut** (`make up`); its contract file supplies URLs,
+The stand comes from the sibling repository [**shop-sut**](https://github.com/BilokinTaras/shop-sut) (`make up`); its contract file supplies URLs,
 the publishable key, region IDs and test credentials. Nothing is hard-coded.
 
 ## Stack
@@ -73,6 +73,7 @@ Prerequisites: Node.js ≥ 22.12, Docker with Compose v2, GNU Make. macOS: `brew
 
 ```bash
 # 1. Start the shop (sibling repository) — writes ../shop-sut/.generated/sut.env
+git clone https://github.com/BilokinTaras/shop-sut.git ../shop-sut   # the shop lives in its own repository, next to this one
 make -C ../shop-sut up && make -C ../shop-sut smoke
 
 # 2. Install
@@ -198,3 +199,7 @@ Claude but have not generated any test yet. Details and limits: [docs/ai-usage.m
 MIT © 2026 Taras Bilokin — see [LICENSE](LICENSE). Tests run against [Medusa](https://github.com/medusajs/medusa)
 and its [dtc-starter](https://github.com/medusajs/dtc-starter) (MIT), version 2.22.2, via the `shop-sut` stand.
 Built with Playwright (Apache-2.0), zod (MIT), faker (MIT), axe-core (MPL-2.0).
+
+---
+
+Part of a QA portfolio: [shop-sut](https://github.com/BilokinTaras/shop-sut) (the shop under test) · **shop-e2e-playwright** (UI and API end-to-end) · [shop-api-pytest](https://github.com/BilokinTaras/shop-api-pytest) (API depth) · [shop-performance-k6](https://github.com/BilokinTaras/shop-performance-k6) (performance) · [devsecops-quality-gates](https://github.com/BilokinTaras/devsecops-quality-gates) (security pipeline)

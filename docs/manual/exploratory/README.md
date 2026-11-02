@@ -16,5 +16,5 @@ charters manually before each release.
 | [S2](session-2-stock.md) | Cart quantities against real stock, and the race for the last item | BUG-E2E-008, BUG-E2E-005 (scope widened) | 1 |
 | [S3](session-3-regions.md) | Region and currency switching between Europe (EUR) and North America (USD) | — | 1 |
 
-Environment for all sessions: `shop-sut` commit `62d1e81` (Medusa 2.22.2, storefront production build),
+Environment for all sessions: `shop-sut` commit `6ae6878` (Medusa 2.22.2, storefront production build),
 Chromium 156 desktop 1280×900, Windows 11.

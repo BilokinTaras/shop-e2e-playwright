@@ -23,7 +23,7 @@ and database checks are out of scope too (`shop-api-pytest`).
 |---|---|---|
 | Medusa backend + admin dashboard | `@medusajs/*` 2.22.2 | Production mode |
 | Storefront | dtc-starter `d4e4dae`, Next.js 16.3.8 | Production build (`next build` + `next start`) |
-| Stand | `shop-sut` `62d1e81`, PostgreSQL 17.11, Redis 7.4.12 | Compose project `qa-shop-sut` |
+| Stand | `shop-sut` `6ae6878`, PostgreSQL 17.11, Redis 7.4.12 | Compose project `qa-shop-sut` |
 | Test data | `shop-sut/docs/test-data-contract.md`, `.generated/sut.env` | IDs are never hard-coded |
 
 ## 3. Features to be tested
