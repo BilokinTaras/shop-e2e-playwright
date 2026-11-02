@@ -14,15 +14,18 @@ async function imagesLoaded(page: Page): Promise<void> {
 
 const SHOT = { fullPage: true, animations: 'disabled', caret: 'hide' } as const;
 
-/** The footer shows the current year; masked so baselines do not break on 1 January. */
-const year = (page: Page) => page.getByText(/© \d{4}/);
+/**
+ * Footer parts that differ for reasons other than a regression: the current year (1 January) and the
+ * category list, whose order changes between installations — BUG-E2E-009.
+ */
+const footerNoise = (page: Page) => [page.getByText(/© \d{4}/), page.getByTestId('footer-categories')];
 
 test.describe('Visual', { tag: '@visual' }, () => {
   test('home page', async ({ page, env }) => {
     await new HomePage(page, env.SUT_STOREFRONT_COUNTRY).goto();
     await expect(page.getByTestId('product-wrapper')).toHaveCount(3);
     await imagesLoaded(page);
-    await expect(page).toHaveScreenshot('home.png', { ...SHOT, mask: [year(page)] });
+    await expect(page).toHaveScreenshot('home.png', { ...SHOT, mask: footerNoise(page) });
   });
 
   test('product page', async ({ page, env }) => {
@@ -30,7 +33,7 @@ test.describe('Visual', { tag: '@visual' }, () => {
     // Related products show starter items with images from Medusa's public S3 bucket: masked.
     const related = page.getByTestId('related-products-container');
     await expect(related).toBeVisible();
-    await expect(page).toHaveScreenshot('product.png', { ...SHOT, mask: [related, year(page)] });
+    await expect(page).toHaveScreenshot('product.png', { ...SHOT, mask: [related, ...footerNoise(page)] });
   });
 
   test('cart with one item', async ({ page, env }) => {
@@ -42,7 +45,7 @@ test.describe('Visual', { tag: '@visual' }, () => {
     await cart.goto();
     await expect(cart.row('QA Mug')).toBeVisible();
     await imagesLoaded(page);
-    await expect(page).toHaveScreenshot('cart.png', { ...SHOT, mask: [year(page)] });
+    await expect(page).toHaveScreenshot('cart.png', { ...SHOT, mask: footerNoise(page) });
   });
 
   test('checkout, address step', async ({ page, env }) => {
@@ -53,6 +56,6 @@ test.describe('Visual', { tag: '@visual' }, () => {
     await new CheckoutPage(page, country).goto('address');
     await expect(page.getByTestId('shipping-first-name-input')).toBeVisible();
     await imagesLoaded(page);
-    await expect(page).toHaveScreenshot('checkout-address.png', { ...SHOT, mask: [year(page)] });
+    await expect(page).toHaveScreenshot('checkout-address.png', { ...SHOT, mask: footerNoise(page) });
   });
 });
