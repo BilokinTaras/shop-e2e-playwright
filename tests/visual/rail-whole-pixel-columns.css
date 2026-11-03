@@ -1,0 +1,7 @@
+/* Applied only while the home rail cards are screenshotted. At the 1280 px viewport the rail's three columns
+   are 394.67 px wide, so a card in the second or third column starts at a fractional x and its edges are
+   anti-aliased differently. The rail order changes between installations (BUG-E2E-009), so the same card
+   lands in different columns. Whole-pixel columns make a card render the same wherever it lands. */
+ul:has(> li [data-testid='product-wrapper']) {
+  grid-template-columns: repeat(3, 394px);
+}
