@@ -55,7 +55,9 @@ categories, `variants.rank` or a fixed sort for variants).
 ## How it is pinned
 
 `tests/visual/pages.spec.ts`, with a comment naming this finding: the footer category list is masked; the
-home page is compared with the product cards masked and each card on its own, found by its title; the product
+home page is compared with the product cards masked and each card on its own, found by its title, with the
+rail's columns made whole pixels wide for that screenshot (a card that moved to another column otherwise
+differed at its anti-aliased edges — a fifth stand, from a clean clone on 2026-11-03, showed it); the product
 page chooses size M before the screenshot. Nothing fails automatically when it is fixed: an expected-failure
 test cannot be used, because on some installations the order happens to be right and the test would pass by
 chance. The functional tests already choose a size explicitly, and the API tests' `variants[0]` is safe

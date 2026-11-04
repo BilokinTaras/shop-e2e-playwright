@@ -23,6 +23,9 @@ runs on localhost, so a browser in a container must reach it exactly as a host b
    list, whose order differs between installations (BUG-E2E-009, found by the first CI run). The home
    page's product rail has the same defect, so its cards are masked on the page and compared one by one,
    found by title; the product page chooses a size explicitly instead of relying on the preselected one.
+   A card is captured with a stylesheet (`stylePath`) that makes the rail's columns whole pixels wide: at the
+   1280 px viewport they are 394.67 px, so the same card rendered in another column differed by about 1 % of
+   its pixels at the edges (found 2026-11-03, re-running the suite from a clean clone).
 5. QA products use local images served by the storefront, so the screens do not depend on the internet.
 
 ## Alternatives considered

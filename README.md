@@ -3,7 +3,7 @@
 UI and API test automation for **Medusa**, an open-source commerce platform: storefront, admin and the
 Store/Admin REST APIs in one Playwright framework, with visual, accessibility and network checks.
 
-![Playwright](https://img.shields.io/badge/Playwright-1.64.1-2EAD33) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6) ![Medusa](https://img.shields.io/badge/Medusa-2.22.2-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
+[![PR checks](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/pr.yml/badge.svg)](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/pr.yml) [![Nightly](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/nightly.yml/badge.svg)](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/nightly.yml) [![Weekly](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/weekly.yml/badge.svg)](https://github.com/BilokinTaras/shop-e2e-playwright/actions/workflows/weekly.yml) ![Playwright](https://img.shields.io/badge/Playwright-1.64.1-2EAD33) ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6) ![Medusa](https://img.shields.io/badge/Medusa-2.22.2-blue) ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ## In 30 seconds
 
@@ -25,7 +25,9 @@ Store/Admin REST APIs in one Playwright framework, with visual, accessibility an
 
 **Nightly report on GitHub Pages:** https://bilokintaras.github.io/shop-e2e-playwright/ — a summary page (runs
 per project, failed and flaky tests) and the merged HTML report with traces, published by
-[`nightly.yml`](.github/workflows/nightly.yml) once it has run. Locally: `npm run report`.
+[`nightly.yml`](.github/workflows/nightly.yml). Latest scheduled run, 2026-11-03: **126 runs — 126 passed,
+0 failed, 0 flaky** across Chromium, Firefox, WebKit and the API suite
+([run 41598670213](https://github.com/BilokinTaras/shop-e2e-playwright/actions/runs/41598670213)). Locally: `npm run report`.
 
 ## Architecture
 
@@ -197,10 +199,8 @@ Claude but have not generated any test yet. Details and limits: [docs/ai-usage.m
 
 ## Roadmap & known limitations
 
-- The workflows pass `actionlint`, `zizmor` and Prettier locally but have not run on GitHub yet; the Pages link
-  shows nothing until the first nightly run.
 - Server-side fault injection (Toxiproxy between storefront and backend) for backend-failure UI tests.
-- Verified on Windows 11 x86_64 so far; macOS arm64 and Linux CI runs pending.
+- Verified on Windows 11 x86_64 and on Linux in CI (GitHub-hosted Ubuntu runners); macOS arm64 is still pending.
 - Visual tests cover four screens in Chromium only, by design.
 - Playwright Test Agents: initialised, first planner/generator exercise still to do.
 - Findings are not yet filed upstream with Medusa.

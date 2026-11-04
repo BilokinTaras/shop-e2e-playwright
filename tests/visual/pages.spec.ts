@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import type { Page } from '@playwright/test';
 
 import { ProductCard } from '../../src/components/product-card';
@@ -14,6 +16,9 @@ async function imagesLoaded(page: Page): Promise<void> {
 }
 
 const SHOT = { fullPage: true, animations: 'disabled', caret: 'hide' } as const;
+
+/** Card screenshots must not depend on which rail column the card lands in — see the stylesheet. */
+const RAIL_WHOLE_PIXEL_COLUMNS = path.join(import.meta.dirname, 'rail-whole-pixel-columns.css');
 
 /**
  * Footer parts that differ for reasons other than a regression: the current year (1 January) and the
@@ -38,6 +43,7 @@ test.describe('Visual', { tag: '@visual' }, () => {
       await expect(card).toHaveScreenshot(`home-card-${title.toLowerCase().replaceAll(' ', '-')}.png`, {
         animations: 'disabled',
         caret: 'hide',
+        stylePath: RAIL_WHOLE_PIXEL_COLUMNS,
       });
     }
   });
